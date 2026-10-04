@@ -40,7 +40,15 @@ const TYPE_WORD = 'word';
  *  优先用听写专用清晰音频（分包），回退到跟读共享音频。 */
 function audioFor(en) {
   const k = textUtil.normKey(en);
-  return dictAudioMap[k] || audioMap[k] || '';
+  // 自己的清晰音频永远优先，命中就不去动别人的
+  if (dictAudioMap[k]) return dictAudioMap[k];
+
+  const shared = audioMap[k] || '';
+  // 课文示范音频已经搬进了 ReadAloud 分包。听写页在 dictationAudio 分包里，
+  // 分包之间是不能互相引用的，拿到的这个路径必定404 —— 表现为"点了没声音"还不报错。
+  // 宁可直接返回空（页面会提示"这句还没有音频"），也不要留一颗静默的雷。
+  if (shared.indexOf('ReadAloud/') === 0) return '';
+  return shared;
 }
 
 /**

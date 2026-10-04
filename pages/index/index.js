@@ -3,8 +3,11 @@ const storage = require('../../utils/storage.js');
 const tts = require('../../utils/tts.js');
 const dictationLib = require('../../utils/dictation.js');
 
-// 音频自检用的示范句（第一课第一句，肯定有随包音频）
-const SELF_TEST_TEXT = 'We moved here to Shenzhen yesterday.';
+// 音频自检用的示范音。
+// ⚠️ 必须用留在主包的音频：课文句子的示范音体量大，已经搬进 ReadAloud 分包
+// （跟 pages/lesson 放一起），而首页属于主包 —— 主包页面取不到分包资源，
+// 拿一句课文来试播会假性失败，把"没问题"误报成"小程序坏了"。
+const SELF_TEST_TEXT = 'meet the neighbours';
 
 /** 听写入口那句话：没练过就说清是什么，练过了就报正确率 */
 function dictBannerHint() {
@@ -81,7 +84,8 @@ Page({
   openLesson(e) {
     const id = e.currentTarget.dataset.id;
     // 支持"继续上次练习"：记住上次练到哪一句
-    let url = '/pages/lesson/lesson?lesson=' + id;
+    // 跟读页连同它的示范音频一起在 ReadAloud 分包里，路径要对上
+    let url = '/ReadAloud/pages/lesson/lesson?lesson=' + id;
     try {
       const last = wx.getStorageSync('last_pos_' + id);
       if (last && typeof last.sentence === 'number') {

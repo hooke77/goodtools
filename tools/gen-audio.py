@@ -45,7 +45,11 @@ except ImportError:
 # ============================ CONFIG ============================
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# 课文句子的示范音体量最大，单独放进 ReadAloud 分包，跟 pages/lesson 同一个包
+# （课文补全成全文后主包 2MB 装不下）。单词和听写句型留在主包 —— 首页自检、
+# 单词页都要用，它们属于主包页面，取不到分包资源。
 AUDIO_DIR = os.path.join(ROOT, 'audios')
+AUDIO_DIR_READ = os.path.join(ROOT, 'ReadAloud', 'audios')
 MAP_FILE = os.path.join(ROOT, 'data', 'audio-map.js')
 TMP_DIR = os.path.join(ROOT, '.audio-tmp')
 
@@ -189,6 +193,7 @@ def write_map(mapping):
 def main():
     force = '--force' in sys.argv
     os.makedirs(AUDIO_DIR, exist_ok=True)
+    os.makedirs(AUDIO_DIR_READ, exist_ok=True)
     os.makedirs(TMP_DIR, exist_ok=True)
     os.makedirs(os.path.dirname(MAP_FILE), exist_ok=True)
 
@@ -202,8 +207,12 @@ def main():
     for i, item in enumerate(texts):
         text = item['text']
         k = key_of(text)
-        dst = os.path.join(AUDIO_DIR, item['id'] + '.mp3')
-        mapping[normalize(text)] = 'audios/' + item['id'] + '.mp3'
+        # kind: 's' 课文句子 → ReadAloud 分包；'w' 单词 / 'p' 听写句型 → 主包
+        is_sentence = item['kind'] == 's'
+        outdir = AUDIO_DIR_READ if is_sentence else AUDIO_DIR
+        prefix = 'ReadAloud/audios/' if is_sentence else 'audios/'
+        dst = os.path.join(outdir, item['id'] + '.mp3')
+        mapping[normalize(text)] = prefix + item['id'] + '.mp3'
 
         if not force and os.path.exists(dst) and os.path.getsize(dst) > 800:
             skipped += 1
@@ -229,11 +238,15 @@ def main():
         time.sleep(REQUEST_GAP)
 
     # 删掉映射里不存在的文件（课文改过之后留下的孤儿）
+    # 主包和分包两个目录都要扫，文件名互不重叠（句子 u1-p1-s1 / 单词 u1-w1 / 句型 u1-d1）
     keep = set(v.split('/')[-1] for v in mapping.values())
-    for f in os.listdir(AUDIO_DIR):
-        if f.endswith('.mp3') and f not in keep:
-            os.remove(os.path.join(AUDIO_DIR, f))
-            print('  清理孤儿文件：', f)
+    for d in (AUDIO_DIR, AUDIO_DIR_READ):
+        if not os.path.isdir(d):
+            continue
+        for f in os.listdir(d):
+            if f.endswith('.mp3') and f not in keep:
+                os.remove(os.path.join(d, f))
+                print('  清理孤儿文件：', f)
 
     # 反向清理：只保留磁盘上确实存在的文件。
     # 抓取失败的文本绝不能留在索引里 —— 否则端上会拿到一个不存在的路径，

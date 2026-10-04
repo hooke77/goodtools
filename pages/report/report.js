@@ -156,7 +156,7 @@ Page({
       });
     });
     wx.navigateTo({
-      url: '/pages/lesson/lesson?lesson=' + lessonId + '&passage=' + pi + '&sentence=' + si
+      url: '/ReadAloud/pages/lesson/lesson?lesson=' + lessonId + '&passage=' + pi + '&sentence=' + si
     });
   },
 

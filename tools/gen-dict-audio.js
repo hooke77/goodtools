@@ -27,13 +27,36 @@ const dictLib = require('../utils/dictation.js'); // resolveSourceId
 const lessonsData = require('../data/lessons.js'); // { lessons:[{id,words:[...]}] }
 const textUtil = require('../utils/text.js');
 
+/**
+ * 这句重点句型是不是就是课文里的某一句 —— 按文本严格比对。
+ *
+ * 刻意不复用 dictLib.resolveSourceId()（那是"从音频文件名反查"）：
+ * 它依赖已经生成的 dictation-audio-map，一旦课文增删改，
+ * 旧索引仍会把这句认成原来的 id，于是重跑 enum 永远修不回来 —— 自锁。
+ * 文本相等才是源头上的判据：相等，才配共享课文的错题统计。
+ */
+function sourceSentenceId(text) {
+  const t = String(text || '').trim();
+  const list = lessonsData.lessons || [];
+  for (let i = 0; i < list.length; i++) {
+    const passages = list[i].passages || [];
+    for (let j = 0; j < passages.length; j++) {
+      const sentences = passages[j].sentences || [];
+      for (let k = 0; k < sentences.length; k++) {
+        if (sentences[k].en === t) return sentences[k].id;
+      }
+    }
+  }
+  return '';
+}
+
 function enumItems() {
   const items = [];
   dictData.units.forEach(function (u) {
     u.patterns.forEach(function (p, i) {
-      // 和课文原句一致的，复用课文句子 id（文件名沿用 uN-pN-sN），
+      // 和课文原句完全一致的，复用课文句子 id（文件名沿用 uN-pN-sN），
       // 这样 utils/dictation.js 仍能反推出"这句就是课文第 N 句"并合并错题统计。
-      let id = dictLib.resolveSourceId(p.en);
+      let id = sourceSentenceId(p.en);
       if (!id) id = u.id + '-d' + (i + 1);
       items.push({ id: id, text: p.en, type: 'pattern' });
     });

@@ -11,6 +11,8 @@ module.exports = {
       en: 'Why do people move to new places?',
       cn: '人们为什么要搬到新的地方？',
       theme: '#4b6bfb',
+      // 按课本页码顺序收录：课文正文 → 拓展阅读 → 准备 → 语法 → 对话，
+      // 句子取课本原文，不再挑句/截短。
       passages: [
         {
           id: 'u1-p1',
@@ -26,12 +28,13 @@ module.exports = {
             { id: 'u1-p1-s7', en: 'It makes me so happy when I look at your photo.', cn: '看到你的照片时，我非常开心。' },
             { id: 'u1-p1-s8', en: 'I miss you so much!', cn: '我太想你了！' },
             { id: 'u1-p1-s9', en: "School has started and it's going OK.", cn: '开学了，一切都还不错。' },
-            { id: 'u1-p1-s10', en: 'I joined the school band and the volleyball team last week.', cn: '上周我加入了学校乐队和排球队。' },
-            { id: 'u1-p1-s11', en: "I'm so excited!", cn: '我太兴奋了！' },
-            { id: 'u1-p1-s12', en: 'Guess what!', cn: '你猜怎么着！' },
-            { id: 'u1-p1-s13', en: 'I am going to play in a concert.', cn: '我要在音乐会上演出。' },
-            { id: 'u1-p1-s14', en: 'I raise money for homeless animals.', cn: '我为流浪动物筹款。' },
-            { id: 'u1-p1-s15', en: "I can't wait for the holiday so I can meet you!", cn: '我迫不及待地盼着假期，好和你见面！' }
+            { id: 'u1-p1-s10', en: "I joined the school band and the volleyball team last week, so I'm quite busy.", cn: '上周我加入了学校乐队和排球队，所以挺忙的。' },
+            { id: 'u1-p1-s11', en: 'Ningning and Yuanyuan from the band invited me to Happy Valley this weekend.', cn: '乐队里的宁宁和圆圆这周末邀请我去欢乐谷。' },
+            { id: 'u1-p1-s12', en: "I'm so excited!", cn: '我太兴奋了！' },
+            { id: 'u1-p1-s13', en: 'Guess what!', cn: '你猜怎么着！' },
+            { id: 'u1-p1-s14', en: 'On Saturday, Ningning, Yuanyuan and I are going to play in a concert and raise money for homeless animals.', cn: '周六，我和宁宁、圆圆要在音乐会上演出，并为流浪动物筹款。' },
+            { id: 'u1-p1-s15', en: 'I feel so happy that I can help them.', cn: '能帮助它们，我感到很开心。' },
+            { id: 'u1-p1-s16', en: "I can't wait for the holiday so I can meet you!", cn: '我迫不及待地盼着假期，好和你见面！' }
           ]
         },
         {
@@ -41,11 +44,72 @@ module.exports = {
           sentences: [
             { id: 'u1-p2-s1', en: 'Every day, people move to new places.', cn: '每天都有人们搬到新的地方。' },
             { id: 'u1-p2-s2', en: 'Why do people move?', cn: '人们为什么要搬家？' },
-            { id: 'u1-p2-s3', en: 'Cities often have more businesses, so there are more jobs.', cn: '城市里往往有更多企业，所以工作机会更多。' },
-            { id: 'u1-p2-s4', en: 'Some people move to be closer to better services.', cn: '有些人搬家是为了离更好的服务设施更近。' },
-            { id: 'u1-p2-s5', en: 'Some people move for more space.', cn: '有些人搬家是为了更大的空间。' },
-            { id: 'u1-p2-s6', en: 'Sometimes people move to make a change in their lives.', cn: '有时人们搬家是为了让生活有所改变。' },
-            { id: 'u1-p2-s7', en: 'People move for many reasons, but usually for a better life.', cn: '人们搬家的原因很多，但通常都是为了更好的生活。' }
+            { id: 'u1-p2-s3', en: "Let's look at three important reasons.", cn: '我们来看三个重要原因。' },
+            { id: 'u1-p2-s4', en: 'Cities often have more businesses, so there are more jobs for people.', cn: '城市里往往有更多企业，所以人们的工作机会更多。' },
+            { id: 'u1-p2-s5', en: 'In 2001, around 38 percent of people in China lived in cities.', cn: '2001 年，中国约有 38% 的人住在城市里。' },
+            { id: 'u1-p2-s6', en: 'In 2022, that number was around 65 percent.', cn: '到了 2022 年，这个数字约为 65%。' },
+            { id: 'u1-p2-s7', en: 'Last year, my parents found new jobs in Chengdu, so we moved here.', cn: '去年我父母在成都找到了新工作，所以我们搬来了这里。' },
+            { id: 'u1-p2-s8', en: "I'm in a new school, and I like my new friends.", cn: '我在一所新学校，我喜欢我的新朋友们。' },
+            { id: 'u1-p2-s9', en: 'Some people may move to be closer to better services, such as hospitals and schools.', cn: '有些人搬家是为了离更好的服务设施更近，比如医院和学校。' },
+            { id: 'u1-p2-s10', en: 'Some people may move for more space.', cn: '有些人搬家是为了更大的空间。' },
+            { id: 'u1-p2-s11', en: 'When I was three, my parents sold our flat in London and bought a house outside the city.', cn: '我三岁时，父母卖掉我们在伦敦的公寓，在城外买了一栋房子。' },
+            { id: 'u1-p2-s12', en: "There's lots of space to play football here.", cn: '这里有好多地方可以踢足球。' },
+            { id: 'u1-p2-s13', en: 'Sometimes, people may move to make a change in their lives.', cn: '有时人们搬家是为了让生活有所改变。' },
+            { id: 'u1-p2-s14', en: 'They may want to learn about another country.', cn: '他们可能想了解另一个国家。' },
+            { id: 'u1-p2-s15', en: 'My family moved to China when I was five.', cn: '我五岁时，我们全家搬到了中国。' },
+            { id: 'u1-p2-s16', en: 'My parents came here to study Chinese.', cn: '我父母来这里是为了学中文。' },
+            { id: 'u1-p2-s17', en: 'We love this country.', cn: '我们热爱这个国家。' },
+            { id: 'u1-p2-s18', en: 'As you can see, people move for many reasons, but usually for a better life.', cn: '正如你所看到的，人们搬家的原因很多，但通常都是为了更好的生活。' },
+            { id: 'u1-p2-s19', en: 'Maybe one day you will move too!', cn: '也许有一天你也会搬家！' }
+          ]
+        },
+        {
+          id: 'u1-p3',
+          name: 'Get ready',
+          nameCn: '准备 · 搬到一个新地方',
+          sentences: [
+            { id: 'u1-p3-s1', en: 'My family moved here to Shenyang last week.', cn: '我们家上周搬到了沈阳。' },
+            { id: 'u1-p3-s2', en: 'Everything is new here.', cn: '这里一切都是新的。' },
+            { id: 'u1-p3-s3', en: 'Today was a cold winter day.', cn: '今天是寒冷的冬日。' },
+            { id: 'u1-p3-s4', en: 'I got up early in the morning.', cn: '我一大早就起床了。' },
+            { id: 'u1-p3-s5', en: 'I made a snowman.', cn: '我堆了一个雪人。' },
+            { id: 'u1-p3-s6', en: 'Then, I met my neighbours.', cn: '然后，我遇见了我的邻居们。' },
+            { id: 'u1-p3-s7', en: 'We played together.', cn: '我们一起玩。' },
+            { id: 'u1-p3-s8', en: 'We threw snowballs at each other.', cn: '我们互相扔雪球。' },
+            { id: 'u1-p3-s9', en: 'In the afternoon, we went ice skating.', cn: '下午我们去滑冰了。' },
+            { id: 'u1-p3-s10', en: 'It was fun.', cn: '那很有趣。' },
+            { id: 'u1-p3-s11', en: 'We moved to Shanghai one month ago.', cn: '我们一个月前搬到了上海。' },
+            { id: 'u1-p3-s12', en: 'Before that, we lived in Beijing.', cn: '在那之前，我们住在北京。' },
+            { id: 'u1-p3-s13', en: 'Yesterday, I went to my new school for the first time.', cn: '昨天，我第一次去了我的新学校。' }
+          ]
+        },
+        {
+          id: 'u1-p4',
+          name: 'Grammar in use',
+          nameCn: '语法 · 一般过去时',
+          sentences: [
+            { id: 'u1-p4-s1', en: 'I moved to a house near a park.', cn: '我搬到了公园附近的一栋房子。' },
+            { id: 'u1-p4-s2', en: "When I'm sleepy, I run to the park.", cn: '当我困的时候，我就跑去公园。' },
+            { id: 'u1-p4-s3', en: "That's a good idea.", cn: '那是个好主意。' },
+            { id: 'u1-p4-s4', en: "When you run, you won't feel sleepy.", cn: '你跑起来就不会觉得困了。' },
+            { id: 'u1-p4-s5', en: 'I run to the park because my favourite tree is there.', cn: '我跑去公园，因为我最喜欢的那棵树在那里。' },
+            { id: 'u1-p4-s6', en: 'I like to take a nap under it.', cn: '我喜欢在树下打个盹。' },
+            { id: 'u1-p4-s7', en: "It's quiet.", cn: '那里很安静。' },
+            { id: 'u1-p4-s8', en: 'Mike moved to Shenzhen yesterday.', cn: '迈克昨天搬到了深圳。' },
+            { id: 'u1-p4-s9', en: 'I joined the school band last week.', cn: '我上周加入了学校乐队。' },
+            { id: 'u1-p4-s10', en: 'Mark moved to Beijing last year.', cn: '马克去年搬到了北京。' },
+            { id: 'u1-p4-s11', en: 'Bella went to a new school two years ago.', cn: '贝拉两年前去了一所新学校。' },
+            { id: 'u1-p4-s12', en: 'Mia cleaned her new house yesterday.', cn: '米娅昨天打扫了她的新房子。' }
+          ]
+        },
+        {
+          id: 'u1-p5',
+          name: 'Communicate',
+          nameCn: '对话 · 你想搬到哪里',
+          sentences: [
+            { id: 'u1-p5-s1', en: 'Where do you want to move?', cn: '你想搬到哪里去？' },
+            { id: 'u1-p5-s2', en: 'I want to move to Harbin.', cn: '我想搬到哈尔滨。' },
+            { id: 'u1-p5-s3', en: 'When I move there, I can enjoy winter sports.', cn: '搬到那里以后，我就能玩冬季运动了。' }
           ]
         }
       ],

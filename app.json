@@ -1,11 +1,17 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/lesson/lesson",
     "pages/words/words",
     "pages/report/report"
   ],
   "subpackages": [
+    {
+      "root": "ReadAloud",
+      "name": "跟读示范",
+      "pages": [
+        "pages/lesson/lesson"
+      ]
+    },
     {
       "root": "dictationAudio",
       "name": "听写清晰音频",
