@@ -1,0 +1,120 @@
+.tabs {
+  display: flex;
+  gap: 12rpx;
+  margin-bottom: 22rpx;
+  flex-wrap: wrap;
+}
+
+.tab {
+  font-size: 26rpx;
+  color: var(--ink2);
+  background: #fff;
+  border-radius: 999rpx;
+  padding: 12rpx 24rpx;
+  box-shadow: 0 2rpx 10rpx rgba(31, 39, 51, 0.04);
+}
+
+.tab.active {
+  background: var(--primary);
+  color: #fff;
+}
+
+.stat-grid {
+  display: flex;
+  margin-top: 24rpx;
+  gap: 16rpx;
+}
+
+.stat {
+  flex: 1;
+  background: #f7f9ff;
+  border-radius: 18rpx;
+  padding: 20rpx 0;
+  text-align: center;
+}
+
+.stat .sn {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.stat .sn.warn {
+  color: var(--bad);
+}
+
+.stat .sl {
+  font-size: 22rpx;
+  color: var(--ink2);
+  margin-top: 4rpx;
+}
+
+.section-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--ink2);
+  margin: 28rpx 6rpx 16rpx;
+}
+
+.sent-card {
+  padding: 26rpx;
+}
+
+.sc-en {
+  font-size: 32rpx;
+  line-height: 1.5;
+  margin-top: 16rpx;
+}
+
+.sc-cn {
+  font-size: 25rpx;
+  color: var(--ink2);
+  margin-top: 8rpx;
+}
+
+.sc-words {
+  margin-top: 16rpx;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.wtag {
+  font-family: Georgia, serif;
+  font-size: 24rpx;
+  background: var(--bad-soft);
+  color: var(--bad);
+  border-radius: 999rpx;
+  padding: 4rpx 18rpx;
+  margin: 6rpx 10rpx 0 0;
+}
+
+.wrow {
+  padding: 18rpx 0;
+  border-bottom: 1rpx solid var(--line);
+}
+
+.wrow:last-child {
+  border-bottom: none;
+}
+
+.wen {
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.wcn {
+  font-size: 24rpx;
+  color: var(--ink2);
+}
+
+.cross {
+  font-size: 22rpx;
+  color: var(--warn);
+}
+
+.wtimes {
+  font-size: 26rpx;
+  color: var(--bad);
+  font-weight: 600;
+}

@@ -1,0 +1,103 @@
+<view class="page">
+
+  <view class="tabs">
+    <view
+      wx:for="{{tabs}}"
+      wx:key="id"
+      class="tab {{item.id === lessonId ? 'active' : ''}}"
+      data-id="{{item.id}}"
+      bindtap="onTabTap"
+    >{{item.unit}}</view>
+  </view>
+
+  <view class="card card-tight">
+    <view class="row-between">
+      <view class="tiny">单词跟读 · 点一个词开始练</view>
+      <view class="tiny">已读好 {{stat.mastered}}/{{stat.total}}</view>
+    </view>
+  </view>
+
+  <!-- 当前练习面板 -->
+  <view class="card word-panel" wx:if="{{current}}">
+    <view class="row-between">
+      <view class="tiny">正在练</view>
+      <view class="close" bindtap="closeCurrent">收起</view>
+    </view>
+
+    <view class="panel-en en">{{current.en}}</view>
+    <view class="panel-ph">{{current.ph}}</view>
+    <view class="panel-cn">{{current.cn}}</view>
+
+    <view class="bar mt24" wx:if="{{result}}">
+      <view class="bar-in {{result.level === 'excellent' ? 'is-ok' : (result.level === 'ok' ? 'is-warn' : 'is-bad')}}" style="width:{{result.score}}%"></view>
+    </view>
+
+    <view class="score-line mt16" wx:if="{{result}}">
+      <text class="big-score {{result.level}}">{{result.score}}分</text>
+      <text class="sub">{{result.levelText}}</text>
+    </view>
+    <view class="tiny mt8" wx:if="{{result && result.mode === 'auto'}}">听到的是：{{result.recognized || '（没有听清）'}}</view>
+
+    <view class="tip-block mt16" wx:if="{{tips.length}}">
+      <view class="tip-line" wx:for="{{tips}}" wx:key="*this">💡 {{item}}</view>
+      <view class="demo-line" wx:if="{{demoLine}}">{{demoLine}}</view>
+    </view>
+
+    <view class="recording-hint" wx:if="{{state === 'recording'}}">
+      <text class="dot"></text> 正在听你读… {{partialText}}
+    </view>
+
+    <!-- 自评面板：连着听「示范 → 我的」，自己判断 -->
+    <view wx:if="{{selfJudge}}">
+      <!-- 节奏比对：录音时长 vs 示范时长 -->
+      <view class="pace-box {{pace.level}}" wx:if="{{pace}}">
+        <view class="pace-head">
+          <text class="pace-label">{{pace.label}}</text>
+          <text class="pace-ratio">你的录音是示范的 {{pace.ratioText}}</text>
+        </view>
+        <view class="pace-tip" wx:if="{{pace.tip}}">{{pace.tip}}</view>
+      </view>
+
+      <button class="btn btn-primary btn-block mt16" bindtap="compareAB" loading="{{state === 'demo'}}">
+        🔁 连着听：示范 → 我的
+      </button>
+      <view class="row mt16" style="gap:20rpx">
+        <button class="btn btn-ghost grow" bindtap="playReview">▶︎ 只听我的</button>
+        <button class="btn btn-ghost grow" bindtap="playDemo">🔊 只听示范</button>
+      </view>
+      <view class="row mt16" style="gap:20rpx">
+        <button class="btn btn-ghost grow" bindtap="playSlow">🐢 慢速示范</button>
+        <button class="btn btn-ghost grow" bindtap="onRecordTap">🎤 再录一次</button>
+      </view>
+      <view class="row mt16" style="gap:20rpx">
+        <button class="btn btn-gray grow" data-ok="0" bindtap="onSelfJudge">😅 还不熟</button>
+        <button class="btn btn-primary grow" data-ok="1" bindtap="onSelfJudge">✅ 读对了</button>
+      </view>
+    </view>
+
+    <view class="row mt24" style="gap:20rpx">
+      <button class="btn btn-ghost grow" bindtap="playDemo">🔊 听示范</button>
+      <button class="btn btn-ghost grow" bindtap="playSlow">🐢 慢速</button>
+      <button class="btn {{state === 'recording' ? 'btn-gray' : 'btn-primary'}} grow" bindtap="onRecordTap">
+        {{state === 'recording' ? '⏹ 读完' : '🎤 跟读'}}
+      </button>
+    </view>
+    <button class="btn btn-gray btn-block mt16" bindtap="nextWord">练下一个词 →</button>
+  </view>
+
+  <!-- 单词列表 -->
+  <view
+    wx:for="{{words}}"
+    wx:key="key"
+    class="word-row"
+    data-k="{{index}}"
+    bindtap="onWordTap"
+  >
+    <view class="grow">
+      <view class="wr-en en">{{item.en}}</view>
+      <view class="wr-ph">{{item.ph}}　{{item.cn}}</view>
+    </view>
+    <text class="wr-tag {{item.cls}}">{{item.tag}}</text>
+  </view>
+
+</view>

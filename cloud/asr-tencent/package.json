@@ -1,0 +1,8 @@
+{
+  "name": "asr-tencent",
+  "version": "1.0.0",
+  "description": "腾讯云一句话识别代理：给个人主体小程序提供跟读语音识别（替代不可用的微信同声传译插件）",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {}
+}

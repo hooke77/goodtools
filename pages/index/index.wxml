@@ -1,0 +1,76 @@
+<view class="page">
+
+  <!-- 顶部总览 -->
+  <view class="hero">
+    <view class="hero-title">今天也来读英语吧</view>
+    <view class="hero-sub">沪教牛津版 · 六年级上册</view>
+    <view class="hero-stats">
+      <view class="hero-stat">
+        <view class="n">{{stats.attempts}}</view>
+        <view class="l">跟读次数</view>
+      </view>
+      <view class="hero-stat">
+        <view class="n">{{stats.avgScore}}</view>
+        <view class="l">平均分</view>
+      </view>
+      <view class="hero-stat">
+        <view class="n">{{stats.sentenceKinds}}</view>
+        <view class="l">练过句子</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 语音能力提示 -->
+  <view class="voice-banner" wx:if="{{!voiceOK}}" bindtap="showVoiceHelp">
+    <text class="voice-title">🎧 跟读打分：自评模式</text>
+    <text class="voice-sub">示范朗读照常可用；想开机器自动识别，点这里看办法</text>
+  </view>
+
+  <!-- 快捷入口 -->
+  <view class="quick">
+    <view class="quick-item" bindtap="openWords">
+      <view class="qi-icon">🔤</view>
+      <view class="qi-text">单词跟读</view>
+    </view>
+    <view class="quick-item" bindtap="openReport">
+      <view class="qi-icon">📊</view>
+      <view class="qi-text">错误报告</view>
+    </view>
+    <view class="quick-item" bindtap="audioSelfTest">
+      <view class="qi-icon">🔊</view>
+      <view class="qi-text">音频自检</view>
+    </view>
+  </view>
+
+  <!-- 听写入口 -->
+  <view class="dict-banner" bindtap="openDictation">
+    <view class="db-left">
+      <view class="db-title">✍️ 听写练习</view>
+      <view class="db-sub">{{dictHint}}</view>
+    </view>
+    <view class="db-go">开始 ›</view>
+  </view>
+
+  <!-- 单元列表 -->
+  <view class="section-title">选择单元</view>
+
+  <view class="unit-card" wx:for="{{list}}" wx:key="id" data-id="{{item.id}}" bindtap="openLesson">
+    <view class="unit-left" style="background:{{item.theme}}">
+      <text class="unit-no">{{item.unit}}</text>
+    </view>
+    <view class="unit-main">
+      <view class="unit-en">{{item.en}}</view>
+      <view class="unit-cn">{{item.cn}}</view>
+      <view class="bar mt16">
+        <view class="bar-in {{item.percent >= 80 ? 'is-ok' : (item.percent >= 40 ? 'is-warn' : '')}}" style="width:{{item.percent}}%"></view>
+      </view>
+      <view class="unit-meta">
+        <text class="tiny">已练 {{item.practiced}}/{{item.total}} 句</text>
+        <text class="tiny" wx:if="{{item.avgScore}}">均分 {{item.avgScore}}</text>
+        <text class="tiny err" wx:if="{{item.errCount}}">待攻克 {{item.errCount}} 句</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="foot-tip">今日热词：<text class="hot">{{todayWord}}</text> —— 读三遍试试？</view>
+</view>

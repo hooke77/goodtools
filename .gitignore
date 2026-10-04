@@ -1,0 +1,14 @@
+# 微信开发者工具生成的本地私有配置（含本机路径，不要入库）
+project.private.config.json
+
+# 音频合成过程留下的临时文件（tools/gen-audio.py）
+.audio-tmp/
+
+# 依赖目录
+node_modules/
+cloud/asr-tencent/node_modules/
+
+# 编辑器与系统杂项
+.DS_Store
+Thumbs.db
+*.log

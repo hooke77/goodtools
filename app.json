@@ -1,0 +1,32 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/lesson/lesson",
+    "pages/words/words",
+    "pages/report/report"
+  ],
+  "subpackages": [
+    {
+      "root": "dictationAudio",
+      "name": "听写清晰音频",
+      "pages": [
+        "pages/dictation/dictation"
+      ]
+    }
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#4b6bfb",
+    "navigationBarTitleText": "小学英语朗读",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f4f6fb"
+  },
+  "permission": {
+    "scope.record": {
+      "desc": "用于朗读跟读录音，给出评分与纠正建议"
+    }
+  },
+  "lazyCodeLoading": "requiredComponents",
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

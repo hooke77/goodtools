@@ -1,0 +1,398 @@
+/* ================= 听写页 ================= */
+
+.ta-c {
+  text-align: center;
+}
+
+.section-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--ink2);
+  margin: 24rpx 4rpx 18rpx;
+}
+
+/* ---- 顶部小标题 ---- */
+.hero-mini {
+  background: linear-gradient(135deg, #4b6bfb, #7d92ff);
+  border-radius: 28rpx;
+  padding: 34rpx 36rpx 30rpx;
+  color: #fff;
+  margin-bottom: 24rpx;
+  box-shadow: 0 10rpx 30rpx rgba(75, 107, 251, 0.25);
+}
+
+.hm-title {
+  font-size: 40rpx;
+  font-weight: 700;
+}
+
+.hm-sub {
+  font-size: 26rpx;
+  opacity: 0.9;
+  margin-top: 8rpx;
+}
+
+/* ---- 二选一卡片（听写什么 / 怎么听写） ---- */
+.opt-row {
+  display: flex;
+  gap: 20rpx;
+}
+
+.opt {
+  flex: 1;
+  background: #fff;
+  border: 2rpx solid var(--line);
+  border-radius: 22rpx;
+  padding: 24rpx 22rpx;
+  box-shadow: 0 2rpx 12rpx rgba(31, 39, 51, 0.04);
+}
+
+.opt.on {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+}
+
+.opt-t {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.opt.on .opt-t {
+  color: var(--primary-deep);
+}
+
+.opt-s {
+  font-size: 22rpx;
+  color: var(--ink2);
+  margin-top: 6rpx;
+  line-height: 1.4;
+}
+
+/* ---- 单元切换 ---- */
+.tabs {
+  display: flex;
+  gap: 12rpx;
+  margin-bottom: 8rpx;
+  flex-wrap: wrap;
+}
+
+.tab {
+  font-size: 26rpx;
+  color: var(--ink2);
+  background: #fff;
+  border-radius: 999rpx;
+  padding: 12rpx 26rpx;
+  box-shadow: 0 2rpx 10rpx rgba(31, 39, 51, 0.04);
+}
+
+.tab.active {
+  background: var(--primary);
+  color: #fff;
+}
+
+.focus-hint {
+  margin: 16rpx 4rpx 0;
+  color: var(--primary-deep);
+}
+
+/* ---- 题量 ---- */
+.chip-row {
+  display: flex;
+  gap: 16rpx;
+}
+
+.chip-opt {
+  flex: 1;
+  text-align: center;
+  font-size: 26rpx;
+  color: var(--ink2);
+  background: #fff;
+  border: 2rpx solid var(--line);
+  border-radius: 16rpx;
+  padding: 16rpx 0;
+}
+
+.chip-opt.on {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+  color: var(--primary-deep);
+  font-weight: 600;
+}
+
+.foot-note {
+  font-size: 22rpx;
+  color: var(--ink2);
+  line-height: 1.6;
+  margin: 20rpx 8rpx 0;
+}
+
+/* ================= 答题 ================= */
+
+.quiz-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14rpx;
+}
+
+.qh-btn {
+  width: 56rpx;
+  height: 56rpx;
+  line-height: 56rpx;
+  text-align: center;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--ink2);
+  font-size: 28rpx;
+  box-shadow: 0 2rpx 10rpx rgba(31, 39, 51, 0.05);
+}
+
+.qh-mid {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.qh-unit {
+  font-size: 24rpx;
+  color: var(--ink2);
+}
+
+.quiz-card {
+  margin-top: 24rpx;
+}
+
+.q-tag {
+  display: inline-block;
+  font-size: 22rpx;
+  color: var(--primary-deep);
+  background: var(--primary-soft);
+  border-radius: 999rpx;
+  padding: 6rpx 20rpx;
+}
+
+/* ---- 播放 ---- */
+.play-big {
+  width: 168rpx;
+  height: 168rpx;
+  border-radius: 50%;
+  margin: 32rpx auto 16rpx;
+  background: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 12rpx 28rpx rgba(75, 107, 251, 0.3);
+}
+
+.play-big.on {
+  background: var(--primary-deep);
+  transform: scale(0.96);
+}
+
+.play-icon {
+  font-size: 64rpx;
+  color: #fff;
+}
+
+/* ---- 纸笔模式 ---- */
+.paper-hint {
+  margin-top: 24rpx;
+  padding: 22rpx;
+  border-radius: 18rpx;
+  background: var(--warn-soft);
+  color: #a5691a;
+  font-size: 26rpx;
+  text-align: center;
+}
+
+/* ---- 答案框 ---- */
+.answer-box {
+  margin-top: 24rpx;
+  padding: 26rpx 24rpx;
+  border-radius: 20rpx;
+  background: #f7f8fc;
+  border: 2rpx dashed #d5dbf0;
+}
+
+.ans-en {
+  font-size: 38rpx;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+.ans-ph {
+  font-size: 26rpx;
+  color: var(--primary);
+  margin-top: 4rpx;
+}
+
+.ans-cn {
+  font-size: 26rpx;
+  color: var(--ink2);
+  margin-top: 8rpx;
+}
+
+.ans-point {
+  font-size: 24rpx;
+  color: var(--primary-deep);
+  margin-top: 14rpx;
+}
+
+.ans-tip {
+  font-size: 24rpx;
+  color: #a5691a;
+  margin-top: 6rpx;
+}
+
+/* ---- 打字模式 ---- */
+.type-input {
+  margin-top: 24rpx;
+  background: #f7f8fc;
+  border: 2rpx solid var(--line);
+  border-radius: 18rpx;
+  padding: 24rpx;
+  font-size: 32rpx;
+  min-height: 96rpx;
+}
+
+.chk-head {
+  margin-top: 24rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  text-align: center;
+}
+
+.chk-head.ok {
+  color: var(--ok);
+}
+
+.chk-head.bad {
+  color: var(--bad);
+}
+
+.mk-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10rpx;
+  margin-top: 18rpx;
+  padding: 20rpx;
+  border-radius: 18rpx;
+  background: #f7f8fc;
+}
+
+.mk {
+  font-size: 32rpx;
+  padding: 2rpx 8rpx;
+  border-radius: 8rpx;
+}
+
+.mk-ok {
+  color: var(--ok);
+}
+
+.mk-wrong {
+  color: var(--bad);
+  text-decoration: line-through;
+  background: var(--bad-soft);
+}
+
+.mk-miss {
+  color: var(--bad);
+  background: var(--bad-soft);
+  text-decoration: underline wavy;
+}
+
+.mk-extra {
+  color: var(--warn);
+  background: var(--warn-soft);
+}
+
+.diff-list {
+  margin-top: 16rpx;
+}
+
+.diff-line {
+  font-size: 25rpx;
+  color: var(--ink2);
+  line-height: 1.8;
+}
+
+.d-good {
+  color: var(--ok);
+  font-weight: 600;
+}
+
+.d-bad {
+  color: var(--bad);
+  font-weight: 600;
+}
+
+.skip {
+  margin-top: 28rpx;
+  text-align: center;
+  font-size: 24rpx;
+  color: var(--ink2);
+  text-decoration: underline;
+}
+
+/* ================= 交卷 ================= */
+
+.done-card {
+  text-align: center;
+  padding: 48rpx 28rpx 40rpx;
+}
+
+.done-rate {
+  font-size: 110rpx;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--primary);
+}
+
+.done-pct {
+  font-size: 40rpx;
+  margin-left: 6rpx;
+}
+
+.done-sub {
+  font-size: 28rpx;
+  color: var(--ink2);
+  margin-top: 10rpx;
+}
+
+.done-cheer {
+  font-size: 26rpx;
+  color: var(--ok);
+  margin-top: 14rpx;
+}
+
+.wrong-card {
+  border-left: 8rpx solid var(--bad);
+}
+
+.wc-en {
+  font-size: 34rpx;
+  font-weight: 600;
+  margin-top: 14rpx;
+  line-height: 1.4;
+}
+
+.wc-cn {
+  font-size: 25rpx;
+  color: var(--ink2);
+  margin-top: 4rpx;
+}
+
+.wc-typed {
+  font-size: 25rpx;
+  color: var(--bad);
+  margin-top: 10rpx;
+}
+
+.wc-point {
+  font-size: 24rpx;
+  color: var(--ink2);
+  margin-top: 6rpx;
+}

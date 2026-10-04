@@ -1,0 +1,97 @@
+<view class="page">
+
+  <view class="tabs">
+    <view
+      wx:for="{{tabs}}"
+      wx:key="id"
+      class="tab {{item.id === activeId ? 'active' : ''}}"
+      data-id="{{item.id}}"
+      bindtap="onTabTap"
+    >{{item.unit}}</view>
+  </view>
+
+  <!-- 概况 -->
+  <view class="card">
+    <view class="row-between">
+      <view class="h2">学习概况</view>
+      <view class="tiny" wx:if="{{updatedText}}">更新于 {{updatedText}}</view>
+    </view>
+    <view class="stat-grid">
+      <view class="stat">
+        <view class="sn">{{summary.attempts}}</view>
+        <view class="sl">跟读次数</view>
+      </view>
+      <view class="stat">
+        <view class="sn">{{summary.avgScore}}</view>
+        <view class="sl">平均分</view>
+      </view>
+      <view class="stat">
+        <view class="sn">{{summary.mastered}}</view>
+        <view class="sl">已读好</view>
+      </view>
+      <view class="stat">
+        <view class="sn warn">{{summary.needWork}}</view>
+        <view class="sl">待加强</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty" wx:if="{{empty}}">
+    <text class="empty-icon">📖</text>
+    <view>还没有练习记录</view>
+    <view class="tiny mt8">去读几句课文，这里就会自动生成错题报告啦</view>
+  </view>
+
+  <!-- 高频错误句子 -->
+  <block wx:if="{{errSentences.length}}">
+    <view class="section-title">高频错误句子 Top {{errSentences.length}}</view>
+    <view class="card sent-card" wx:for="{{errSentences}}" wx:key="id">
+      <view class="row-between">
+        <text class="chip chip-bad">错 {{item.errorCount}} 次</text>
+        <text class="tiny">{{item.lessonUnit}} · 均分 {{item.avgScore}}</text>
+      </view>
+      <view class="sc-en en">{{item.en}}</view>
+      <view class="sc-cn">{{item.cn}}</view>
+
+      <view class="sc-words" wx:if="{{item.topWords.length}}">
+        <text class="tiny">难词：</text>
+        <text class="wtag" wx:for="{{item.topWords}}" wx:for-item="w" wx:key="word" wx:for-index="wi">{{w.word}} ×{{w.times}}</text>
+      </view>
+
+      <view class="row mt16" style="gap:20rpx">
+        <button class="btn btn-gray btn-sm grow" data-sid="{{item.id}}" data-lid="{{item.lessonId}}" bindtap="goPractice">去练这句</button>
+      </view>
+    </view>
+  </block>
+
+  <!-- 高频错误词语 -->
+  <block wx:if="{{errWords.length}}">
+    <view class="section-title">高频错误词语</view>
+    <view class="card">
+      <view class="wrow" wx:for="{{errWords}}" wx:key="word">
+        <view class="row-between">
+          <view class="grow">
+            <text class="wen en">{{item.word}}</text>
+            <text class="wcn" wx:if="{{item.cn}}">　{{item.cn}}</text>
+            <text class="cross" wx:if="{{item.crossUnit}}"> · 跨单元</text>
+          </view>
+          <text class="wtimes">{{item.times}} 次</text>
+        </view>
+        <view class="bar mt8">
+          <view class="bar-in is-bad" style="width:{{item.percent}}%"></view>
+        </view>
+      </view>
+      <view class="tiny mt16">这个词表按"读错次数"排序，练的时候优先攻前 5 个。</view>
+    </view>
+  </block>
+
+  <!-- 操作 -->
+  <view class="card" wx:if="{{!empty}}">
+    <button class="btn btn-primary btn-block" bindtap="openDictation">✍️ 去听写练习，把这些词再写一遍</button>
+    <button class="btn btn-ghost btn-block mt16" bindtap="copyList">📋 复制"待攻克清单"</button>
+    <button class="btn btn-danger btn-block mt16" bindtap="clearCurrent">
+      {{activeId === 'all' ? '清空全部记录' : '清空本单元记录'}}
+    </button>
+  </view>
+
+</view>

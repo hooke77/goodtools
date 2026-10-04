@@ -1,0 +1,139 @@
+.tabs {
+  display: flex;
+  gap: 12rpx;
+  margin-bottom: 22rpx;
+  flex-wrap: wrap;
+}
+
+.tab {
+  font-size: 26rpx;
+  color: var(--ink2);
+  background: #fff;
+  border-radius: 999rpx;
+  padding: 12rpx 26rpx;
+  box-shadow: 0 2rpx 10rpx rgba(31, 39, 51, 0.04);
+}
+
+.tab.active {
+  background: var(--primary);
+  color: #fff;
+}
+
+.word-panel {
+  border: 2rpx solid #dfe6ff;
+}
+
+.close {
+  font-size: 24rpx;
+  color: var(--ink2);
+}
+
+.panel-en {
+  font-size: 52rpx;
+  font-weight: 700;
+  margin-top: 16rpx;
+  line-height: 1.3;
+}
+
+.panel-ph {
+  font-size: 26rpx;
+  color: var(--primary);
+  margin-top: 6rpx;
+}
+
+.panel-cn {
+  font-size: 28rpx;
+  color: var(--ink2);
+  margin-top: 4rpx;
+}
+
+.score-line {
+  display: flex;
+  align-items: baseline;
+  gap: 16rpx;
+}
+
+.big-score {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.big-score.excellent {
+  color: var(--ok);
+}
+
+.big-score.ok {
+  color: #c97a15;
+}
+
+.recording-hint {
+  margin-top: 24rpx;
+  font-size: 26rpx;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+}
+
+.dot {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  background: var(--bad);
+  margin-right: 14rpx;
+  display: inline-block;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+.word-row {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 24rpx 26rpx;
+  margin-bottom: 16rpx;
+  box-shadow: 0 3rpx 14rpx rgba(31, 39, 51, 0.04);
+}
+
+.word-row:active {
+  background: #fafbff;
+}
+
+.wr-en {
+  font-size: 32rpx;
+  font-weight: 600;
+}
+
+.wr-ph {
+  font-size: 24rpx;
+  color: var(--ink2);
+  margin-top: 6rpx;
+}
+
+.wr-tag {
+  font-size: 24rpx;
+  color: var(--ink2);
+  background: #f1f3f9;
+  border-radius: 999rpx;
+  padding: 6rpx 18rpx;
+}
+
+.wr-tag.ok {
+  background: var(--ok-soft);
+  color: var(--ok);
+}
+
+.wr-tag.warn {
+  background: var(--warn-soft);
+  color: #c97a15;
+}
+
+.wr-tag.bad {
+  background: var(--bad-soft);
+  color: var(--bad);
+}

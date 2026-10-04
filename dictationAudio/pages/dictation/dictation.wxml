@@ -1,0 +1,202 @@
+<view class="page">
+
+  <!-- ==================== 设置 ==================== -->
+  <block wx:if="{{phase === 'setup'}}">
+
+    <view class="hero-mini">
+      <view class="hm-title">✍️ 听写练习</view>
+      <view class="hm-sub">重点句型与课本单词，听一遍写下来</view>
+    </view>
+
+    <view class="card card-tight" wx:if="{{dictStats.sessions}}">
+      <view class="row-between">
+        <view class="tiny">累计听写 {{dictStats.sessions}} 次 · {{dictStats.total}} 题</view>
+        <view class="tiny">总正确率 {{dictStats.rate}}%</view>
+      </view>
+    </view>
+
+    <view class="section-title">听写什么</view>
+    <view class="opt-row">
+      <view class="opt {{type === 'pattern' ? 'on' : ''}}" data-type="pattern" bindtap="pickType">
+        <view class="opt-t">重点句型</view>
+        <view class="opt-s">每单元的语法模型句</view>
+      </view>
+      <view class="opt {{type === 'word' ? 'on' : ''}}" data-type="word" bindtap="pickType">
+        <view class="opt-t">单词</view>
+        <view class="opt-s">课本核心词与词组</view>
+      </view>
+    </view>
+
+    <view class="section-title">范围</view>
+    <view class="tabs">
+      <view class="tab {{unitId === 'all' ? 'active' : ''}}" data-id="all" bindtap="pickUnit">全部</view>
+      <view
+        wx:for="{{units}}"
+        wx:key="id"
+        class="tab {{unitId === item.id ? 'active' : ''}}"
+        data-id="{{item.id}}"
+        bindtap="pickUnit"
+      >{{item.unit}}</view>
+    </view>
+    <view class="tiny focus-hint" wx:for="{{units}}" wx:key="id" wx:if="{{item.id === unitId}}">
+      本单元重点：{{item.focus}}
+    </view>
+
+    <view class="section-title">题量 <text class="tiny">可出 {{available}} 题</text></view>
+    <view class="chip-row">
+      <view
+        wx:for="{{countOptions}}"
+        wx:key="value"
+        class="chip-opt {{count === item.value ? 'on' : ''}}"
+        data-v="{{item.value}}"
+        bindtap="pickCount"
+      >{{item.label}}</view>
+    </view>
+
+    <view class="section-title">怎么听写</view>
+    <view class="opt-row">
+      <view class="opt {{mode === 'paper' ? 'on' : ''}}" data-mode="paper" bindtap="pickMode">
+        <view class="opt-t">纸笔听写</view>
+        <view class="opt-s">写在纸上，写完整句再对答案</view>
+      </view>
+      <view class="opt {{mode === 'type' ? 'on' : ''}}" data-mode="type" bindtap="pickMode">
+        <view class="opt-t">打字听写</view>
+        <view class="opt-s">打出来，自动逐词判对错</view>
+      </view>
+    </view>
+
+    <button class="btn btn-primary btn-block btn-lg mt24" bindtap="start">
+      开始听写（{{planned}} 题）
+    </button>
+    <view class="foot-note">
+      每句只自动放一遍，听不清可以点「再听一遍」或「🐢 慢速」。写错的会自动进错题本，报告页能一起看。
+    </view>
+  </block>
+
+  <!-- ==================== 答题 ==================== -->
+  <block wx:elif="{{phase === 'quiz'}}">
+
+    <view class="quiz-head">
+      <view class="qh-btn" bindtap="quit">✕</view>
+      <view class="qh-mid">第 {{idx + 1}} / {{questions.length}} 题</view>
+      <view class="qh-unit">{{q.unit}}</view>
+    </view>
+    <view class="bar"><view class="bar-in is-ok" style="width:{{progress}}%"></view></view>
+
+    <view class="card quiz-card">
+      <view class="q-tag">{{q.type === 'word' ? '单词' : '重点句型'}}{{q.point ? ' · ' + q.point : ''}}</view>
+
+      <view class="play-big {{playing ? 'on' : ''}}" bindtap="replay">
+        <text class="play-icon">{{playing ? '🔊' : '▶'}}</text>
+      </view>
+      <view class="tiny ta-c">{{playing ? '正在播放…' : '点一下再听一遍'}}</view>
+
+      <view class="row mt16" style="gap:20rpx">
+        <button class="btn btn-ghost grow" bindtap="replay">🔊 再听一遍</button>
+        <button class="btn btn-ghost grow" bindtap="playSlow">🐢 慢速</button>
+      </view>
+
+      <!-- ---------- 纸笔模式 ---------- -->
+      <block wx:if="{{mode === 'paper'}}">
+        <block wx:if="{{!revealed}}">
+          <view class="paper-hint">写在纸上，写完了再点下面</view>
+          <button class="btn btn-primary btn-block mt16" bindtap="reveal">👀 对答案</button>
+        </block>
+
+        <block wx:else>
+          <view class="answer-box">
+            <view class="ans-en en">{{q.en}}</view>
+            <view class="ans-ph" wx:if="{{q.ph}}">{{q.ph}}</view>
+            <view class="ans-cn">{{q.cn}}</view>
+            <view class="ans-point" wx:if="{{q.point}}">语法点：{{q.point}}</view>
+            <view class="ans-tip" wx:if="{{q.tip}}">易错：{{q.tip}}</view>
+          </view>
+          <view class="tiny ta-c mt16">和你纸上写的一样吗？</view>
+          <view class="row mt16" style="gap:20rpx">
+            <button class="btn btn-gray grow" data-ok="0" bindtap="judge">❌ 写错了</button>
+            <button class="btn btn-primary grow" data-ok="1" bindtap="judge">✅ 写对了</button>
+          </view>
+        </block>
+      </block>
+
+      <!-- ---------- 打字模式 ---------- -->
+      <block wx:else>
+        <block wx:if="{{!revealed}}">
+          <input
+            class="type-input"
+            value="{{typed}}"
+            placeholder="在这里打出来，再点检查"
+            confirm-type="done"
+            bindinput="onTyped"
+            bindconfirm="doCheck"
+          />
+          <button class="btn btn-primary btn-block mt16" bindtap="doCheck">检查</button>
+        </block>
+
+        <block wx:else>
+          <view class="chk-head {{checked.correct ? 'ok' : 'bad'}}">
+            {{checked.correct ? '✅ 全对！' : '❌ 再看看差别在哪'}}
+          </view>
+
+          <view class="mk-row">
+            <text wx:for="{{checked.marks}}" wx:key="k" class="mk mk-{{item.state}}">{{item.display}}</text>
+          </view>
+
+          <view class="diff-list" wx:if="{{checked.diffs.length}}">
+            <view class="diff-line" wx:for="{{checked.diffs}}" wx:key="k">
+              <block wx:if="{{item.kind === 'wrong'}}">「<text class="d-good">{{item.expected}}</text>」写成了「<text class="d-bad">{{item.got}}</text>」</block>
+              <block wx:elif="{{item.kind === 'miss'}}">漏掉了「<text class="d-good">{{item.expected}}</text>」</block>
+              <block wx:else>多写了「<text class="d-bad">{{item.got}}</text>」</block>
+            </view>
+          </view>
+
+          <view class="answer-box mt16">
+            <view class="ans-en en">{{q.en}}</view>
+            <view class="ans-cn">{{q.cn}}</view>
+            <view class="ans-point" wx:if="{{q.point}}">语法点：{{q.point}}</view>
+            <view class="ans-tip" wx:if="{{q.tip}}">易错：{{q.tip}}</view>
+          </view>
+
+          <button class="btn btn-primary btn-block mt16" bindtap="nextFromCheck">下一题 →</button>
+        </block>
+      </block>
+
+      <view class="skip" wx:if="{{!revealed}}" bindtap="skip">跳过这句</view>
+    </view>
+  </block>
+
+  <!-- ==================== 交卷 ==================== -->
+  <block wx:else>
+
+    <view class="card done-card">
+      <view class="done-rate">{{summary.rate}}<text class="done-pct">%</text></view>
+      <view class="done-sub">听写 {{summary.total}} 题，写对 {{summary.right}} 题</view>
+      <view class="done-cheer" wx:if="{{summary.wrong === 0}}">全对！这个范围可以放心了 🎉</view>
+    </view>
+
+    <block wx:if="{{wrongList.length}}">
+      <view class="section-title">要重点复习的 {{wrongList.length}} 条</view>
+      <view class="card wrong-card" wx:for="{{wrongList}}" wx:key="en">
+        <view class="row-between">
+          <text class="q-tag">{{item.unit}} · {{item.type === 'word' ? '单词' : '句型'}}</text>
+          <text class="tiny" wx:if="{{item.skipped}}">跳过了</text>
+        </view>
+        <view class="wc-en en">{{item.en}}</view>
+        <view class="wc-cn">{{item.cn}}</view>
+        <view class="wc-typed" wx:if="{{item.typed}}">你写的是：<text class="en">{{item.typed}}</text></view>
+        <view class="wc-point" wx:if="{{item.point}}">语法点：{{item.point}}</view>
+      </view>
+    </block>
+
+    <view class="card" wx:else>
+      <view class="tiny ta-c">没有错题，太棒了！</view>
+    </view>
+
+    <button class="btn btn-primary btn-block mt24" wx:if="{{wrongList.length}}" bindtap="retryWrong">
+      🔁 把错的再听写一遍（{{wrongList.length}} 题）
+    </button>
+    <button class="btn btn-ghost btn-block mt16" bindtap="backToSetup">重新设置范围</button>
+    <button class="btn btn-ghost btn-block mt16" bindtap="openReport">📊 去错误报告看看</button>
+  </block>
+
+</view>
