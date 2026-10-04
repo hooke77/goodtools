@@ -10,7 +10,7 @@ App({
     asrReady: false,
     // 实际生效的识别通道：'self' | 'cloud' | 'plugin'
     asrMode: 'self',
-    version: '1.0.3'
+    version: '1.0.4'
   },
 
   onLaunch() {
