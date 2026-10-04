@@ -1,12 +1,12 @@
-const lessonData = require('../../data/lessons.js');
-const scoreLib = require('../../utils/score.js');
-const tipsLib = require('../../utils/tips.js');
-const paceLib = require('../../utils/pace.js');
-const storage = require('../../utils/storage.js');
-const tts = require('../../utils/tts.js');
-const asr = require('../../utils/asr.js');
-const config = require('../../config.js');
-const karaoke = require('../../utils/karaoke.js');
+const lessonData = require('../../../data/lessons.js');
+const scoreLib = require('../../../utils/score.js');
+const tipsLib = require('../../../utils/tips.js');
+const paceLib = require('../../../utils/pace.js');
+const storage = require('../../../utils/storage.js');
+const tts = require('../../../utils/tts.js');
+const asr = require('../../../utils/asr.js');
+const config = require('../../../config.js');
+const karaoke = require('../../../utils/karaoke.js');
 
 // 慢速示范的倍速（跟读卡壳时用来听清每个词的尾巴）
 const SLOW_RATE = 0.7;
