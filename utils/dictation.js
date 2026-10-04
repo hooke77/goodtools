@@ -44,10 +44,11 @@ function audioFor(en) {
   if (dictAudioMap[k]) return dictAudioMap[k];
 
   const shared = audioMap[k] || '';
-  // 课文示范音频已经搬进了 ReadAloud 分包。听写页在 dictationAudio 分包里，
-  // 分包之间是不能互相引用的，拿到的这个路径必定404 —— 表现为"点了没声音"还不报错。
-  // 宁可直接返回空（页面会提示"这句还没有音频"），也不要留一颗静默的雷。
-  if (shared.indexOf('ReadAloud/') === 0) return '';
+  // 课文示范音频按单元搬进了 u1..u6 六个分包。听写页在 dictationAudio 分包里，
+  // 分包之间不能互相引用，拿到这种路径必定 404 —— 表现为"点了没声音"还不报错。
+  // 这里只放行主包 audios/ 下的资源，其余（任何分包路径）一律返回空，
+  // 让页面提示"这句还没有音频"，也不要留一颗静默的雷。
+  if (shared.indexOf('audios/') !== 0) return '';
   return shared;
 }
 

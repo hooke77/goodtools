@@ -45,11 +45,12 @@ except ImportError:
 # ============================ CONFIG ============================
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# 课文句子的示范音体量最大，单独放进 ReadAloud 分包，跟 pages/lesson 同一个包
-# （课文补全成全文后主包 2MB 装不下）。单词和听写句型留在主包 —— 首页自检、
-# 单词页都要用，它们属于主包页面，取不到分包资源。
+# 课文句子的示范音体量最大：450 句约 3.7MB，单个分包装不下（微信每包上限 2MB），
+# 所以**按单元拆成 u1..u6 六个分包**，跟读页在每个单元分包里各放一份（同一份源码，
+# 见 tools/lesson-src 与 tools/sync-lesson.js）。好处还有按需下载：
+# 打开 Unit 3 只下 Unit 3 的音频，不用等全部。
+# 单词和听写句型留在主包 —— 首页自检、单词页要用，主包页面取不到分包资源。
 AUDIO_DIR = os.path.join(ROOT, 'audios')
-AUDIO_DIR_READ = os.path.join(ROOT, 'ReadAloud', 'audios')
 MAP_FILE = os.path.join(ROOT, 'data', 'audio-map.js')
 TMP_DIR = os.path.join(ROOT, '.audio-tmp')
 
@@ -193,7 +194,8 @@ def write_map(mapping):
 def main():
     force = '--force' in sys.argv
     os.makedirs(AUDIO_DIR, exist_ok=True)
-    os.makedirs(AUDIO_DIR_READ, exist_ok=True)
+    for _u in ('u1', 'u2', 'u3', 'u4', 'u5', 'u6'):
+        os.makedirs(os.path.join(ROOT, _u, 'audios'), exist_ok=True)
     os.makedirs(TMP_DIR, exist_ok=True)
     os.makedirs(os.path.dirname(MAP_FILE), exist_ok=True)
 
@@ -207,10 +209,11 @@ def main():
     for i, item in enumerate(texts):
         text = item['text']
         k = key_of(text)
-        # kind: 's' 课文句子 → ReadAloud 分包；'w' 单词 / 'p' 听写句型 → 主包
+        # kind: 's' 课文句子 → 所属单元的 uN 分包；'w' 单词 / 'p' 听写句型 → 主包
         is_sentence = item['kind'] == 's'
-        outdir = AUDIO_DIR_READ if is_sentence else AUDIO_DIR
-        prefix = 'ReadAloud/audios/' if is_sentence else 'audios/'
+        unit = item['id'].split('-')[0] if is_sentence else ''
+        outdir = os.path.join(ROOT, unit, 'audios') if is_sentence else AUDIO_DIR
+        prefix = (unit + '/audios/') if is_sentence else 'audios/'
         dst = os.path.join(outdir, item['id'] + '.mp3')
         mapping[normalize(text)] = prefix + item['id'] + '.mp3'
 
@@ -238,9 +241,10 @@ def main():
         time.sleep(REQUEST_GAP)
 
     # 删掉映射里不存在的文件（课文改过之后留下的孤儿）
-    # 主包和分包两个目录都要扫，文件名互不重叠（句子 u1-p1-s1 / 单词 u1-w1 / 句型 u1-d1）
+    # 主包和六个单元分包都要扫，文件名互不重叠（句子 u1-p1-s1 / 单词 u1-w1 / 句型 u1-d1）
     keep = set(v.split('/')[-1] for v in mapping.values())
-    for d in (AUDIO_DIR, AUDIO_DIR_READ):
+    dirs = [AUDIO_DIR] + [os.path.join(ROOT, _u, 'audios') for _u in ('u1', 'u2', 'u3', 'u4', 'u5', 'u6')]
+    for d in dirs:
         if not os.path.isdir(d):
             continue
         for f in os.listdir(d):

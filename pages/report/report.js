@@ -156,7 +156,9 @@ Page({
       });
     });
     wx.navigateTo({
-      url: '/ReadAloud/pages/lesson/lesson?lesson=' + lessonId + '&passage=' + pi + '&sentence=' + si
+      // 跟读页在所属单元的分包里（u1..u6），按 lessonId 选包
+      url:
+        '/' + lessonId + '/pages/lesson/lesson?lesson=' + lessonId + '&passage=' + pi + '&sentence=' + si
     });
   },
 

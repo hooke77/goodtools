@@ -6,8 +6,43 @@
   ],
   "subpackages": [
     {
-      "root": "ReadAloud",
-      "name": "跟读示范",
+      "root": "u1",
+      "name": "第一单元跟读",
+      "pages": [
+        "pages/lesson/lesson"
+      ]
+    },
+    {
+      "root": "u2",
+      "name": "第二单元跟读",
+      "pages": [
+        "pages/lesson/lesson"
+      ]
+    },
+    {
+      "root": "u3",
+      "name": "第三单元跟读",
+      "pages": [
+        "pages/lesson/lesson"
+      ]
+    },
+    {
+      "root": "u4",
+      "name": "第四单元跟读",
+      "pages": [
+        "pages/lesson/lesson"
+      ]
+    },
+    {
+      "root": "u5",
+      "name": "第五单元跟读",
+      "pages": [
+        "pages/lesson/lesson"
+      ]
+    },
+    {
+      "root": "u6",
+      "name": "第六单元跟读",
       "pages": [
         "pages/lesson/lesson"
       ]

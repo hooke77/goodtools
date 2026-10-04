@@ -125,7 +125,9 @@ tts.speak = function (text, opts) {
   return Promise.resolve();
 };
 
-require(path.join(ROOT, 'ReadAloud/pages/lesson/lesson.js'));
+// 跟读页按单元复制了六份（见 tools/sync-lesson.js），测其中一份即可 ——
+// 脚本保证六份字节一致
+require(path.join(ROOT, 'u1', 'pages', 'lesson', 'lesson.js'));
 const vm = Object.assign({}, PageObj);
 vm.data = JSON.parse(JSON.stringify(PageObj.data));
 attach(vm);

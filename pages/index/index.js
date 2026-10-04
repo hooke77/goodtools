@@ -84,8 +84,8 @@ Page({
   openLesson(e) {
     const id = e.currentTarget.dataset.id;
     // 支持"继续上次练习"：记住上次练到哪一句
-    // 跟读页连同它的示范音频一起在 ReadAloud 分包里，路径要对上
-    let url = '/ReadAloud/pages/lesson/lesson?lesson=' + id;
+    // 跟读页和该单元的示范音频在同一个单元分包里（u1..u6），路径要对上
+    let url = '/' + id + '/pages/lesson/lesson?lesson=' + id;
     try {
       const last = wx.getStorageSync('last_pos_' + id);
       if (last && typeof last.sentence === 'number') {

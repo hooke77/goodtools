@@ -1,0 +1,202 @@
+<view class="page">
+
+  <!-- 顶部：课文段落切换 + 进度 -->
+  <view class="card card-tight topbar">
+    <view class="row-between">
+      <view class="grow">
+        <view class="h3">
+          {{lesson.unit}}
+          <text class="mode-chip {{voiceMode}}">{{voiceMode === 'self' ? '自评打分' : '自动评分'}}</text>
+        </view>
+        <view class="tiny">{{passage.nameCn}}</view>
+      </view>
+      <view class="list-btn" bindtap="toggleList">☰ 句子</view>
+    </view>
+
+    <view class="passage-tabs">
+      <view
+        wx:for="{{passages}}"
+        wx:key="id"
+        class="ptab {{item.index === passageIndex ? 'active' : ''}}"
+        data-i="{{item.index}}"
+        bindtap="onPassageTap"
+      >{{item.nameCn}} · {{item.count}}句</view>
+    </view>
+
+    <view class="bar mt16">
+      <view class="bar-in" style="width:{{percent}}%"></view>
+    </view>
+    <view class="tiny mt8">{{sentenceNo}}</view>
+  </view>
+
+  <!-- 错句提醒 -->
+  <view class="err-banner" wx:if="{{errorCount && !result}}" bindtap="goFirstError">
+    <text class="eb-text">本课有 {{errorCount}} 句需要再练一遍，点击直接去练</text>
+    <text class="eb-arrow">›</text>
+  </view>
+
+  <!-- 句子卡片 -->
+  <view class="card sentence-card">
+    <view class="tag-line">
+      <text class="chip">读一句，跟一句</text>
+    </view>
+    <view class="sentence-en en">{{sentence.en}}</view>
+    <view class="sentence-cn">{{sentence.cn}}</view>
+
+    <!-- 逐词对错 -->
+    <view class="word-flow" wx:if="{{words.length}}">
+      <text
+        wx:for="{{words}}"
+        wx:key="key"
+        class="w {{item.cls}} {{item.live}}"
+        data-w="{{item.word}}"
+        bindtap="onSelfPick"
+      >{{item.word}}</text>
+    </view>
+    <view class="tiny mt8" wx:if="{{liveIdx >= 0}}">🎯 亮起来的那个词，就是这会儿正在读的</view>
+    <view class="tiny mt8" wx:if="{{result && result.mode === 'auto'}}">绿色=读对　黄色=不太准　红色=没读对</view>
+    <view class="tiny mt8" wx:if="{{selfPicking}}">读不好的词点一下选中，选完点"记录"</view>
+  </view>
+
+  <!-- 录音中 -->
+  <view class="card rec-card" wx:if="{{state === 'recording'}}">
+    <view class="mic-wrap">
+      <view class="mic-pulse"></view>
+      <text class="mic-icon">🎤</text>
+    </view>
+    <view class="rec-title">正在听你读…</view>
+    <view class="rec-text">{{partialText || '大声清楚地读出来吧'}}</view>
+    <button class="btn btn-primary btn-lg btn-block mt24" bindtap="onRecordTap">⏹ 读完了</button>
+  </view>
+
+  <!-- 自评模式面板 -->
+  <view class="card self-card" wx:if="{{selfJudge && state !== 'recording'}}">
+    <view class="h3">听一听，自己评一评</view>
+    <view class="sub mt8">先按「示范 → 我的」连着听两遍，差在哪里一下就听出来了。</view>
+
+    <!-- 节奏比对：录音时长 vs 示范时长 -->
+    <view class="pace-box {{pace.level}}" wx:if="{{pace}}">
+      <view class="pace-head">
+        <text class="pace-label">{{pace.label}}</text>
+        <text class="pace-ratio">你的录音是示范的 {{pace.ratioText}}</text>
+      </view>
+      <view class="pace-tip" wx:if="{{pace.tip}}">{{pace.tip}}</view>
+    </view>
+
+    <button class="btn btn-primary btn-block mt24" bindtap="compareAB" loading="{{state === 'demo'}}">
+      🔁 连着听：示范 → 我的
+    </button>
+    <view class="row mt16" style="gap:20rpx">
+      <button class="btn btn-ghost grow" bindtap="playReview">▶︎ 只听我的</button>
+      <button class="btn btn-ghost grow" bindtap="playDemo">🔊 只听示范</button>
+    </view>
+    <view class="row mt16" style="gap:20rpx">
+      <button class="btn btn-ghost grow" bindtap="playSlow">🐢 慢速示范</button>
+      <button class="btn btn-ghost grow" bindtap="onRecordTap">🎤 再录一次</button>
+    </view>
+    <view class="row mt24" style="gap:20rpx" wx:if="{{!selfPicking}}">
+      <button class="btn btn-gray grow" data-ok="0" bindtap="onSelfJudge">😅 还不熟</button>
+      <button class="btn btn-primary grow" data-ok="1" bindtap="onSelfJudge">✅ 读对了</button>
+    </view>
+  </view>
+
+  <!-- 评分结果 -->
+  <view class="card result-card" wx:if="{{result}}">
+    <view class="row-between">
+      <view class="score-box {{result.level}}">
+        <text class="score-num">{{result.score}}</text>
+        <text class="score-unit">分</text>
+      </view>
+      <view class="grow" style="padding-left:24rpx">
+        <view class="h3">{{result.levelText}}</view>
+        <view class="tiny mt8" wx:if="{{result.mode === 'auto'}}">听到的是：{{result.recognized || '（没有听清）'}}</view>
+        <view class="tiny mt8" wx:if="{{result.mode === 'auto'}}">读对 {{result.matchedCount}}/{{result.totalCount}} 个词</view>
+        <view class="tiny mt8" wx:if="{{result.mode === 'self'}}">{{result.recognized}}</view>
+      </view>
+    </view>
+
+    <view class="err-block mt24" wx:if="{{wrongWords.length}}">
+      <view class="tiny">重点纠正这些词：</view>
+      <view class="err-chips">
+        <text wx:for="{{wrongWords}}" wx:key="*this" class="echip">{{item}}</text>
+      </view>
+    </view>
+
+    <view class="tip-block mt24" wx:if="{{tips.length}}">
+      <view class="tip-line" wx:for="{{tips}}" wx:key="*this">💡 {{item}}</view>
+      <view class="demo-line" wx:for="{{demoLines}}" wx:key="*this">{{item}}</view>
+    </view>
+
+    <view class="row mt24" style="gap:20rpx">
+      <button class="btn btn-ghost grow" bindtap="onRecordTap">🔁 再读一遍</button>
+      <button class="btn btn-primary grow" bindtap="next">下一句 →</button>
+    </view>
+  </view>
+
+  <!-- 自评选词后保存 -->
+  <view class="card" wx:if="{{selfPicking}}">
+    <view class="h3">哪几个词读得不好？</view>
+    <view class="sub mt8">在上面句子里点选（已选 {{selfSelArr.length}} 个），然后点记录。</view>
+    <view class="row mt24" style="gap:20rpx">
+      <button class="btn btn-gray grow" data-ok="1" bindtap="onSelfJudge">算了，都读对了</button>
+      <button class="btn btn-primary grow" bindtap="saveSelfPick">记录并继续</button>
+    </view>
+  </view>
+
+  <!-- 主操作区 -->
+  <view class="card act-card" wx:if="{{state !== 'recording' && !result && !selfJudge && !selfPicking}}">
+    <!-- 读之前先预告易错词，比读错再纠正更有效（自评模式没有识别，全靠这一步把注意力引到位） -->
+    <view class="watch-box" wx:if="{{watch.length}}">
+      <view class="watch-title">读之前，留意这几个词</view>
+      <view class="watch-row" wx:for="{{watch}}" wx:key="word">
+        <text class="watch-word">{{item.word}}</text>
+        <text class="watch-tip">{{item.tip}}</text>
+      </view>
+    </view>
+    <view class="row" style="gap:20rpx">
+      <button class="btn btn-ghost grow" bindtap="playDemo" loading="{{state === 'demo'}}">
+        🔊 听示范
+      </button>
+      <button class="btn btn-ghost grow" bindtap="playSlow" loading="{{state === 'demo'}}">
+        🐢 慢速
+      </button>
+    </view>
+    <button class="btn btn-primary btn-lg btn-block mt16" bindtap="onRecordTap">
+      🎤 我来读一遍
+    </button>
+    <view class="tiny mt16 center">{{voiceDesc}}</view>
+  </view>
+
+  <!-- 底部固定条 -->
+  <view class="footer-bar">
+    <button class="btn btn-gray grow" bindtap="prev">← 上一句</button>
+    <button class="btn btn-ghost grow" bindtap="toggleAutoNext">
+      {{autoNext ? '自动下一句：开' : '自动下一句：关'}}
+    </button>
+    <!-- 下一句用主色实心，和灰色按钮拉开区分，免得点错 -->
+    <button class="btn btn-primary grow" bindtap="next">下一句 →</button>
+  </view>
+
+  <!-- 句子列表抽屉 -->
+  <view class="mask" wx:if="{{showList}}" bindtap="closeList"></view>
+  <view class="drawer" wx:if="{{showList}}">
+    <view class="drawer-head">
+      <view class="h3">本段句子</view>
+      <view class="tiny">✔ 已读好　! 待加强　· 练过</view>
+    </view>
+    <scroll-view scroll-y class="drawer-body">
+      <view
+        wx:for="{{listRows}}"
+        wx:key="id"
+        class="drow {{item.active ? 'active' : ''}}"
+        data-i="{{item.i}}"
+        bindtap="goSentence"
+      >
+        <text class="dtag {{item.cls}}">{{item.tag}}</text>
+        <view class="grow">
+          <view class="den">{{item.en}}</view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+</view>

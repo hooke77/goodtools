@@ -1,0 +1,346 @@
+/* ---------- 顶部 ---------- */
+.topbar {
+  padding-bottom: 22rpx;
+}
+
+.list-btn {
+  font-size: 26rpx;
+  color: var(--primary);
+  background: var(--primary-soft);
+  padding: 12rpx 22rpx;
+  border-radius: 999rpx;
+}
+
+.passage-tabs {
+  display: flex;
+  gap: 14rpx;
+  margin-top: 20rpx;
+  flex-wrap: wrap;
+}
+
+.ptab {
+  font-size: 24rpx;
+  color: var(--ink2);
+  background: #f4f6fb;
+  border-radius: 999rpx;
+  padding: 10rpx 22rpx;
+}
+
+.ptab.active {
+  background: var(--primary);
+  color: #fff;
+}
+
+/* ---------- 错句提醒 ---------- */
+.err-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bad-soft);
+  border-radius: 20rpx;
+  padding: 22rpx 26rpx;
+  margin-bottom: 24rpx;
+}
+
+.eb-text {
+  font-size: 26rpx;
+  color: var(--bad);
+  flex: 1;
+}
+
+.eb-arrow {
+  font-size: 40rpx;
+  color: var(--bad);
+  line-height: 1;
+}
+
+/* ---------- 句子卡片 ---------- */
+.sentence-card {
+  padding: 30rpx 30rpx 24rpx;
+}
+
+.tag-line {
+  margin-bottom: 18rpx;
+}
+
+.sentence-en {
+  font-size: 44rpx;
+  line-height: 1.5;
+  letter-spacing: 0.6rpx;
+  word-break: break-word;
+}
+
+.sentence-cn {
+  font-size: 27rpx;
+  color: var(--ink2);
+  margin-top: 16rpx;
+}
+
+.word-flow {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 26rpx;
+  padding-top: 22rpx;
+  border-top: 1rpx dashed var(--line);
+}
+
+.w {
+  font-family: Georgia, serif;
+  font-size: 32rpx;
+  padding: 6rpx 14rpx;
+  border-radius: 10rpx;
+  margin: 6rpx 10rpx 6rpx 0;
+  background: #f4f6fb;
+  color: var(--ink);
+  transition: background 0.18s ease, transform 0.18s ease, opacity 0.18s ease;
+}
+
+.w.ok {
+  background: var(--ok-soft);
+  color: var(--ok);
+}
+
+.w.near {
+  background: var(--warn-soft);
+  color: #c97a15;
+}
+
+.w.bad {
+  background: var(--bad-soft);
+  color: var(--bad);
+}
+
+/* ---------- 逐词跟读高亮（卡拉OK） ----------
+   刻意排在 ok/near/bad 之后：正在读的词要用亮色盖住评分色，
+   否则上一轮留下的红黄绿会把当前词的颜色吃掉。 */
+.w.reading {
+  background: var(--primary);
+  color: #fff;
+  transform: scale(1.14);
+  box-shadow: 0 4rpx 16rpx rgba(75, 107, 251, 0.38);
+}
+
+/* 已经读过去的部分：压暗但留着，给一条"我走到哪儿了"的痕迹 */
+.w.done {
+  opacity: 0.45;
+}
+
+/* ---------- 录音中 ---------- */
+.rec-card {
+  text-align: center;
+}
+
+.mic-wrap {
+  position: relative;
+  width: 140rpx;
+  height: 140rpx;
+  margin: 10rpx auto 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mic-pulse {
+  position: absolute;
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 50%;
+  background: rgba(75, 107, 251, 0.18);
+  animation: pulse 1.4s ease-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+.mic-icon {
+  font-size: 60rpx;
+  position: relative;
+}
+
+.rec-title {
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.rec-text {
+  font-size: 26rpx;
+  color: var(--ink2);
+  margin-top: 12rpx;
+  min-height: 40rpx;
+}
+
+/* ---------- 结果 ---------- */
+.result-card {
+  padding: 30rpx;
+}
+
+.score-box {
+  width: 168rpx;
+  height: 168rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  flex-shrink: 0;
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.score-box.excellent {
+  background: var(--ok-soft);
+  color: var(--ok);
+}
+
+.score-box.ok {
+  background: var(--warn-soft);
+  color: #c97a15;
+}
+
+.score-box.again {
+  background: var(--bad-soft);
+  color: var(--bad);
+}
+
+.score-num {
+  font-size: 68rpx;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.score-unit {
+  font-size: 26rpx;
+  margin-left: 6rpx;
+}
+
+.err-chips {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 12rpx;
+}
+
+.echip {
+  font-family: Georgia, serif;
+  font-size: 28rpx;
+  background: var(--bad-soft);
+  color: var(--bad);
+  border-radius: 999rpx;
+  padding: 6rpx 22rpx;
+  margin: 8rpx 12rpx 0 0;
+}
+
+.tip-block {
+  background: var(--warn-soft);
+  border-radius: 18rpx;
+  padding: 22rpx 24rpx;
+}
+
+.tip-line {
+  font-size: 27rpx;
+  color: #96631a;
+  line-height: 1.7;
+  margin-bottom: 10rpx;
+}
+
+.demo-line {
+  font-family: Georgia, serif;
+  font-size: 26rpx;
+  color: #b07a2e;
+  margin-bottom: 6rpx;
+}
+
+/* ---------- 自评 ---------- */
+.self-card {
+  background: #fff;
+}
+
+/* ---------- 操作区 ---------- */
+.act-card {
+  padding: 30rpx;
+}
+
+.center {
+  text-align: center;
+}
+
+/* ---------- 抽屉 ---------- */
+.mask {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(20, 25, 40, 0.45);
+  z-index: 10;
+}
+
+.drawer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-height: 72vh;
+  background: #fff;
+  border-radius: 28rpx 28rpx 0 0;
+  z-index: 11;
+  padding: 28rpx 28rpx calc(28rpx + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+}
+
+.drawer-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-bottom: 18rpx;
+  border-bottom: 1rpx solid var(--line);
+}
+
+.drawer-body {
+  max-height: 56vh;
+  margin-top: 12rpx;
+}
+
+.drow {
+  display: flex;
+  align-items: flex-start;
+  padding: 20rpx 12rpx;
+  border-bottom: 1rpx solid var(--line);
+}
+
+.drow.active {
+  background: var(--primary-soft);
+  border-radius: 14rpx;
+}
+
+.dtag {
+  width: 40rpx;
+  font-size: 28rpx;
+  color: var(--ink2);
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.dtag.ok {
+  color: var(--ok);
+}
+
+.dtag.bad {
+  color: var(--bad);
+}
+
+.dtag.warn {
+  color: var(--warn);
+}
+
+.den {
+  font-family: Georgia, serif;
+  font-size: 28rpx;
+  line-height: 1.5;
+}
