@@ -173,7 +173,8 @@
     <button class="btn btn-ghost grow" bindtap="toggleAutoNext">
       {{autoNext ? '自动下一句：开' : '自动下一句：关'}}
     </button>
-    <button class="btn btn-gray grow" bindtap="next">下一句 →</button>
+    <!-- 下一句用主色实心，和灰色按钮拉开区分，免得点错 -->
+    <button class="btn btn-primary grow" bindtap="next">下一句 →</button>
   </view>
 
   <!-- 句子列表抽屉 -->

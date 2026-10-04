@@ -149,7 +149,13 @@ Page({
     if (idx < 0) idx = 0;
     if (idx > list.length - 1) idx = list.length - 1;
     const s = list[idx];
-    this.cleanVoice();
+    // 收尾动作（停播放 / 停录音 / 清定时器）绝不能把翻页带崩：
+    // cleanVoice 里任何一步抛异常，下面的 setData 就不会执行，表现为「点了没反应」。
+    try {
+      this.cleanVoice();
+    } catch (e) {
+      console.warn('[lesson] 清理播放/录音时出错，已忽略，翻页继续：', e);
+    }
 
     this.setData({
       idx: idx,
@@ -194,6 +200,12 @@ Page({
       });
   },
 
+  /**
+   * 翻到下一句。
+   * 这里**不设任何前置条件**：不管有没有读过、读得好不好，随时可以翻。
+   * （以前自动翻页卡在"必须达标"上，孩子读不好就卡住走不动；
+   *   手动翻页一直是无条件的，现在自动翻页也一并放开。）
+   */
   next() {
     if (this.data.idx < this.data.sentences.length - 1) {
       this.goto(this.data.idx + 1);
@@ -204,6 +216,25 @@ Page({
 
   prev() {
     if (this.data.idx > 0) this.goto(this.data.idx - 1);
+  },
+
+  /**
+   * 「自动下一句：开」时安排一次自动翻页。
+   * 统一从这里走，好处是：① 只认开关，不再看分数；② 重复调用不会排两趟；
+   * ③ goto() 里的 cleanVoice 会顺手把未触发的定时器清掉，切了句就不会再跳一次。
+   * @param {number} [delay] 留给孩子看结果的时间（毫秒）
+   */
+  _maybeAutoNext(delay) {
+    if (!this.data.autoNext) return;
+    if (this.autoTimer) {
+      clearTimeout(this.autoTimer);
+      this.autoTimer = null;
+    }
+    const that = this;
+    this.autoTimer = setTimeout(function () {
+      that.autoTimer = null;
+      that.next();
+    }, delay || 900);
   },
 
   /* ---------------- 逐词高亮（卡拉OK） ---------------- */
@@ -299,6 +330,9 @@ Page({
         onProgress: this._demoKaraoke(s),
         onEnded: function () {
           that._finishDemo();
+          // 「自动下一句：开」的真正含义：示范读完这一句，就直接进下一句。
+          // 不用等孩子读、也不用等打分，可以当整篇的示范连播来听。
+          that._maybeAutoNext(900);
         },
         onError: function (err) {
           that._finishDemo();
@@ -364,6 +398,8 @@ Page({
         onProgress: this._demoKaraoke(s),
         onEnded: function () {
           that._finishDemo();
+          // 慢速也是「示范」，同样遵守自动下一句；晚一点跳，听清尾巴再走
+          that._maybeAutoNext(1200);
         },
         onError: function (err) {
           that._finishDemo();
@@ -534,14 +570,11 @@ Page({
     this.practiced = storage.getSentenceScores(this.lessonId);
     this.refreshErrorCount();
 
-    // 只有"读完整且达标"才自动进入下一句；有漏词 / 吞音就停下来重读
-    const cleanPass = r.score >= config.PASS_SCORE && !r.missedWords.length;
-    if (this.data.autoNext && cleanPass) {
-      const that = this;
-      this.autoTimer = setTimeout(function () {
-        that.next();
-      }, 1600);
-    }
+    // 自动下一句只看开关，不看分数。
+    // 以前这里要求「得分达标且没漏词」才自动跳，结果孩子读不好就被卡在这一句走不动，
+    // 反而失去了"多听几遍、先往下走"的机会。不达标该沉淀错题就沉淀（上面已经记了），
+    // 但去留由孩子决定 —— 手动翻页一直是无条件的，自动翻页现在也一样。
+    this._maybeAutoNext(1600);
   },
 
   /* ---------------- 自评模式 ---------------- */
@@ -704,12 +737,9 @@ Page({
     this.practiced = storage.getSentenceScores(this.lessonId);
     this.refreshErrorCount();
 
-    if (passed && this.data.autoNext) {
-      const that = this;
-      this.autoTimer = setTimeout(function () {
-        that.next();
-      }, 1500);
-    }
+    // 同样只看开关：自评"还不熟"也照样往下走，错句已经进错题本了，
+    // 不必把孩子按在这一句上重读。
+    this._maybeAutoNext(1500);
   },
 
   /* ---------------- 句子列表 ---------------- */
