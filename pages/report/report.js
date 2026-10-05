@@ -1,6 +1,8 @@
 const lessonData = require('../../data/lessons.js');
 const storage = require('../../utils/storage.js');
 const config = require('../../config.js');
+// 孩子的跟读录音（永久留存，可回听）
+const recordStore = require('../../utils/record-store.js');
 
 Page({
   data: {
@@ -11,7 +13,10 @@ Page({
     errSentences: [],
     errWords: [],
     empty: true,
-    updatedText: ''
+    updatedText: '',
+    // 留存了多少句录音、占多大地方（家长据此决定要不要清）
+    recCount: 0,
+    recSizeText: ''
   },
 
   onLoad(options) {
@@ -123,7 +128,9 @@ Page({
       errSentences: errSentences,
       errWords: errWords,
       empty: !errSentences.length && !errWords.length,
-      updatedText: updatedText
+      updatedText: updatedText,
+      recCount: recordStore.count(),
+      recSizeText: (recordStore.totalBytes() / 1048576).toFixed(1)
     });
   },
 
@@ -206,6 +213,35 @@ Page({
         if (isAll) storage.clearAll();
         else storage.clearLesson(id);
         wx.showToast({ title: '已清空', icon: 'none' });
+        that.refresh();
+      }
+    });
+  },
+
+  /**
+   * 清理留存的跟读录音（只删声音文件，不动学习记录和错题）。
+   * 录音存在小程序的永久目录，微信不会替你回收，长期练习会慢慢占空间，
+   * 所以给家长一个明确的出口。
+   */
+  clearMyRecords() {
+    const that = this;
+    if (!this.data.recCount) {
+      wx.showToast({ title: '还没有存下的录音', icon: 'none' });
+      return;
+    }
+    wx.showModal({
+      title: '清理我的录音？',
+      content:
+        '将删除已留存的 ' +
+        this.data.recCount +
+        ' 句跟读录音（约 ' +
+        this.data.recSizeText +
+        ' MB），学习记录和错题数据不受影响。',
+      confirmColor: '#ef4b6b',
+      success: function (res) {
+        if (!res.confirm) return;
+        const n = recordStore.clearAll();
+        wx.showToast({ title: '已清理 ' + n + ' 条录音', icon: 'none' });
         that.refresh();
       }
     });

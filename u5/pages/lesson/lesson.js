@@ -7,6 +7,8 @@ const tts = require('../../../utils/tts.js');
 const asr = require('../../../utils/asr.js');
 const config = require('../../../config.js');
 const karaoke = require('../../../utils/karaoke.js');
+// 孩子上一次的跟读录音（永久留存，跨次可回听，见 utils/record-store.js）
+const recordStore = require('../../../utils/record-store.js');
 
 // 慢速示范的倍速（跟读卡壳时用来听清每个词的尾巴）
 const SLOW_RATE = 0.7;
@@ -52,6 +54,9 @@ Page({
     reviewPath: '',
     reviewPlaying: false,
     reviewDuration: 0,
+    // 这一句「上次」的录音（跨次留存）。null = 以前没录过，页面就不显示回听按钮
+    prevRecord: null,
+    prevPlaying: false,
     pace: null,
     watch: [],
     errorCount: 0,
@@ -117,6 +122,8 @@ Page({
     asr.stopPlain();
     asr.stopReview();
     if (this._stopBeat) this._stopBeat();
+    // 正在回听上次录音时翻页，播放被打断、onEnded 不会来，按钮会卡在 loading，这里收回来
+    if (this.data && this.data.prevPlaying) this.setData({ prevPlaying: false });
     if (this.autoTimer) {
       clearTimeout(this.autoTimer);
       this.autoTimer = null;
@@ -175,6 +182,9 @@ Page({
       reviewPath: '',
       reviewPlaying: false,
       reviewDuration: 0,
+      // 翻到这句时，把以前留存的录音捞出来给孩子回听（没有就是 null，按钮自动隐藏）
+      prevRecord: recordStore.get(s.id),
+      prevPlaying: false,
       pace: null,
       // 读之前先预告这句要留意的词（最多两条），比读错再纠正更有效
       watch: paceLib.watchOut(s.en),
@@ -479,6 +489,13 @@ Page({
   /** 进入自评面板（识别失败时也会落到这里，录音不浪费） */
   enterSelfReview(path, durationMs) {
     const s = this.data.sentence;
+
+    // 把这遍声音留下，下次进来还能回听。
+    // 放在这里而不是评分之后，是因为自评和"云端识别失败降级"两条路都经过它，
+    // 只要孩子真读了音就不会漏。失败也无所谓（返回 null），绝不影响这一轮的使用。
+    // 注意 UI 上的 prevRecord 不刷新 —— 它代表"录这一遍之前的那次"，语义才对得上。
+    if (s && path) recordStore.save(s.id, path, durationMs);
+
     // 录完就把拍子收回来，接下来是回放自评或评分着色，两套颜色不能混在一起
     this._stopBeat();
     const patch = this._livePatch();
@@ -494,6 +511,40 @@ Page({
       selfSelMap: {}
     });
     this.setData(patch);
+  },
+
+  /**
+   * 回听这一句「上次」的录音（跨次留存的那条，不是刚录的这遍）。
+   * 点开后会同时跑逐词高亮 —— 听着自己的声音看自己在读哪个词，比干听更容易发现问题。
+   */
+  playPrevRecord() {
+    const rec = this.data.prevRecord;
+    if (!rec || !rec.p) {
+      wx.showToast({ title: '这一句还没有存下的录音', icon: 'none' });
+      return;
+    }
+    const that = this;
+    const sid = this.data.sentence && this.data.sentence.id;
+
+    this.setData({ prevPlaying: true });
+    this._startBeat(rec.d || 0);
+
+    asr.playReview(
+      rec.p,
+      function () {
+        that._stopBeat();
+        that.setData({ prevPlaying: false });
+      },
+      function () {
+        that._stopBeat();
+        that.setData({ prevPlaying: false, prevRecord: null });
+        // 用户清过微信缓存后，Storage 里留下的路径会变成死链接
+        // （看起来有录音，点下去却没声音）。播不出来就顺手把这条记录删掉，
+        // 下次进这一句按钮自动消失，不会反复点到一个空按钮。
+        if (sid) recordStore.drop(sid);
+        wx.showToast({ title: '上次的录音失效了，再读一遍吧', icon: 'none' });
+      }
+    );
   },
 
   stopRecord() {

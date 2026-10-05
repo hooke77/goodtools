@@ -233,6 +233,27 @@ assert(
   '末句给出「这一段读完啦」提示'
 );
 
+/* ---------------- 7) 上次录音会跟着句子加载出来 ---------------- */
+// 录音持久化的底层规则已在 tests/record-store.test.js 覆盖，
+// 这里只盯「页面接线」：翻到这一句时，以前录过的那次要能显示在按钮上。
+console.log('');
+console.log('[7] 上次录音跟着句子加载');
+
+const rec = require(path.join(ROOT, 'utils/record-store.js'));
+// 假装以前在第 1 句录过一次（索引里放一条；本 mock 没有真实文件系统，
+// record-store 会安静降级，但"读出索引"这一步是能验的）
+store[rec._KEY] = {
+  'u1-p1-s1': { p: 'wxfile://usr/recordings/u1-p1-s1.mp3', d: 2400, s: 20480, t: Date.now() }
+};
+
+vm.goto(0);
+assert(vm.data.idx === 0, '翻到 Unit 1 第 1 句');
+assert(vm.data.prevRecord !== null, '以前录过的句子，prevRecord 被读出来了（按钮会显示）');
+assert(vm.data.prevRecord && vm.data.prevRecord.d === 2400, '连时长一起带上（回听时要跑逐词高亮）');
+
+vm.goto(1);
+assert(vm.data.prevRecord === null, '换到没录过的句子，prevRecord 为空（按钮自动隐藏）');
+
 /* ---------------- 收尾 ---------------- */
 tts.speak = realSpeak;
 global.setTimeout = realSetTimeout;

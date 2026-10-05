@@ -89,6 +89,11 @@
   <view class="card" wx:if="{{!empty}}">
     <button class="btn btn-primary btn-block" bindtap="openDictation">✍️ 去听写练习，把这些词再写一遍</button>
     <button class="btn btn-ghost btn-block mt16" bindtap="copyList">📋 复制"待攻克清单"</button>
+    <button
+      wx:if="{{recCount}}"
+      class="btn btn-ghost btn-block mt16"
+      bindtap="clearMyRecords"
+    >🧹 清理我的录音（{{recCount}} 句 / {{recSizeText}} MB）</button>
     <button class="btn btn-danger btn-block mt16" bindtap="clearCurrent">
       {{activeId === 'all' ? '清空全部记录' : '清空本单元记录'}}
     </button>

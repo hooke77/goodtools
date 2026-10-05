@@ -153,6 +153,13 @@
         <text class="watch-tip">{{item.tip}}</text>
       </view>
     </view>
+    <!-- 以前读过这一句的话，先听自己的、再听示范，对比才找得出差别。没读过就自动不显示 -->
+    <button
+      class="btn btn-ghost btn-block mt16"
+      wx:if="{{prevRecord}}"
+      bindtap="playPrevRecord"
+      loading="{{prevPlaying}}"
+    >🔁 听我上次读的</button>
     <view class="row" style="gap:20rpx">
       <button class="btn btn-ghost grow" bindtap="playDemo" loading="{{state === 'demo'}}">
         🔊 听示范
